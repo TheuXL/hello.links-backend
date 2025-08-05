@@ -1,0 +1,19 @@
+# Dependencies
+backend/node_modules
+python-services/.venv
+
+# Environment files
+.env
+*.env
+backend/.env
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# IDE config
+.vscode
+.idea 
+frontend/
+GeoIP.conf

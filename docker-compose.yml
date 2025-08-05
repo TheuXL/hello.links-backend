@@ -1,0 +1,63 @@
+services:
+  mongo:
+    image: mongo
+    container_name: link_backend-mongo-1
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - link-network
+
+  backend:
+    build: ./backend
+    container_name: link_backend-backend-1
+    ports:
+      - "8080:3000"
+    environment:
+      - MONGODB_URI=mongodb://mongo:27017/hellolinksDB
+      - PYTHON_SERVICE_URL=http://python-services:8000
+      - JWT_SECRET=yourSuperSecretKeyForJWT!
+      - PORT=3000
+    depends_on:
+      - mongo
+      - python-services
+    networks:
+      - link-network
+    volumes:
+      - ./backend:/usr/src/app
+      - /usr/src/app/node_modules
+
+  python-services:
+    build: ./python-services
+    container_name: link_backend-python-1
+    ports:
+      - "8000:8000"
+    environment:
+      - MONGODB_URI=mongodb://mongo:27017/hellolinksDB
+      - ABUSEIPDB_API_KEY= # <-- PASTE YOUR KEY HERE
+    networks:
+      - link-network
+    volumes:
+      - ./python-services:/usr/src/app
+      - /usr/src/app/src/geoip_databases
+
+  frontend:
+    build: ./frontend
+    container_name: link_backend-frontend-1
+    ports:
+      - "3001:3001"
+    depends_on:
+      - backend
+    networks:
+      - link-network
+    volumes:
+      - ./frontend:/usr/src/app
+      - /usr/src/app/node_modules
+
+networks:
+  link-network:
+    driver: bridge
+
+volumes:
+  mongo-data:

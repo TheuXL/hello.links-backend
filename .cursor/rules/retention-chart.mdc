@@ -1,0 +1,17 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Retention Chart Implementation
+
+This rule describes the implementation of the daily retention chart feature.
+
+The frontend component for this feature is `[RetentionChart.tsx](mdc:frontend/src/components/dashboard/RetentionChart.tsx)`. It is displayed on the link-specific analytics page: `[page.tsx](mdc:frontend/src/app/dashboard/[linkId]/page.tsx)`.
+
+Data is fetched using the `useRetentionData` hook from `[useAnalytics.ts](mdc:frontend/src/features/analytics/hooks/useAnalytics.ts)`, which in turn calls the `getRetentionData` function in `[api.ts](mdc:frontend/src/features/analytics/services/api.ts)`.
+
+The backend provides the data via the `/api/stats/:linkId/retention` endpoint.
+- The route is defined in `[statsRoutes.js](mdc:backend/src/routes/statsRoutes.js)`.
+- The request is handled by the `getRetentionData` function in `[statsController.js](mdc:backend/src/controllers/statsController.js)`.
+- The core logic resides in the `getRetentionData` function in `[statsService.js](mdc:backend/src/services/statsService.js)`, which uses a MongoDB aggregation pipeline on the `clicks` collection to compute daily click counts and unique visitors.

@@ -1,0 +1,2 @@
+# Ignore GeoIP database files
+*.mmdb 

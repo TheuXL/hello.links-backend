@@ -1,0 +1,16 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# Time on Page Feature Status
+
+The "Time on Page" analytics feature is currently **not implemented**.
+
+A robust implementation would require a client-side tracking script on the destination page to send "heartbeat" events back to the API. This is not feasible with the current application architecture for the following reasons:
+
+1.  **Standard Redirects**: For `redirect` links, the application issues a standard HTTP 301 redirect. We have no control over the content of the destination page and cannot inject a tracking script. This is handled in `[contentController.js](mdc:backend/src/controllers/contentController.js)`.
+
+2.  **Direct Content Serving**: For other link types (`image`, `file`, `text`), the content is served directly with the appropriate `Content-Type` header (e.g., `image/png`, `text/plain`). There is no HTML page wrapper where a tracking script could be executed.
+
+Implementing this feature would require a significant architectural change, such as proxying the content of the destination URL, which is outside the current scope.
